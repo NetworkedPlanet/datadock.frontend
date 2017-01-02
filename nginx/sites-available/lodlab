@@ -24,23 +24,24 @@ server {
                 add_header Content-Type application/n-quads;
         }
 
-        location ~ ^/([^/]+)/([^/]+)/data/(.*) {
+        location ~ ^/([^/]+)/([^/]+)/data/ {
                 if ($http_accept ~* html) {
-                        return 303 $scheme://lodlab.com/$1/$2/page/$3;
+					rewrite ^/([^/]+)/([^/]+)/data/(.*)$ /$1/$2/page/$3.html;
+                    return 303 $uri;
                 }
                 if ($http_accept ~* (nquads|n-quads)) {
-                        rewrite ^/([^/]+)/([^/]+)/data/(.*) /$1/$2/data/$3.nq last;
+                    rewrite ^/([^/]+)/([^/]+)/data/(.*) /$1/$2/data/$3.nq last;
                 }
         }
 
-        location ~ ^/([^/]+)/([^/]+)/id/(.*) {
+        location ~ ^/([^/]+)/([^/]+)/id/ {
                 if ($http_accept ~* html){
-                        rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/page/$3.html;
-                        return 303 $uri;
+                    rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/page/$3.html;
+                    return 303 $uri;
                 }
                 if ($http_accept ~* (nquads|n-quads)){
-                        rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/data/$3.nq;
-                        return 303 $uri;
+                    rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/data/$3.nq;
+                    return 303 $uri;
                 }
                 return 406;
         }
