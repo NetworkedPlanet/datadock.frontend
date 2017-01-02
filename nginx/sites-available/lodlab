@@ -33,26 +33,16 @@ server {
                 }
         }
 
-        location ~ ^/([^/]+)/([^/]+)/resource/ {
+        location ~ ^/([^/]+)/([^/]+)/id/ {
                 if ($http_accept ~* html){
-                        rewrite ^/([^/]+)/([^/]+)/resource/(.*)$ /$1/$2/page/$3.html;
+                        rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/page/$3.html;
                         return 303 $uri;
                 }
                 if ($http_accept ~* (nquads|n-quads)){
-                        rewrite ^/([^/]+)/([^/]+)/resource/(.*)$ /$1/$2/data/$3.nq;
+                        rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/data/$3.nq;
                         return 303 $uri;
                 }
                 return 406;
-        }
-
-        location ~ ^/([^/]+)/([^/]+)/dataset/(.*)\.html$ {
-                proxy_pass https://$1.github.io/$2/dataset/$3.html;
-        }
-
-        location ~ ^/([^/]+)/([^/]+)/dataset/(.*) {
-                if ($http_accept ~* html) {
-                        rewrite ^/([^/]+)/([^/]+)/dataset/(.*) /$1/$2/dataset/$3.html last;
-                }
         }
 
 }
