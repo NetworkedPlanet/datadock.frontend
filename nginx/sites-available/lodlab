@@ -8,11 +8,6 @@ server {
 
         access_log /var/log/nginx/access.log upstreamlog;
 
-        location / {
-                root    /var/www/lodlab;
-                index   index.html;
-        }
-
         location ~ ^/([^/]+)/([^/]+)/page/(.*) {
                 # Proxy HTML files from the github pages account
                 proxy_pass https://$1.github.io/$2/page/$3;
@@ -57,5 +52,10 @@ server {
 			}
 			return 406;
 		}
+
+		location / {
+			proxy_set_header Host      $host;
+			proxy_set_header X-Real-IP $remote_addr;
+        }
 
 }
