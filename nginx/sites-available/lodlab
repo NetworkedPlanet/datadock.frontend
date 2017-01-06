@@ -41,13 +41,13 @@ server {
                 return 406;
         }
 
-		location ~ ^/([^/]+)/([^/]+) {
+		location ~ ^/([^/]+)/([^/]+)(/?)$ {
 			if ($http_accept ~* html){
-				rewrite ^/([^/]+)/([^/]+)$ /$1/$2/page/index.html;
+				rewrite ^/([^/]+)/([^/]+)(/?)$ /$1/$2/page/index.html;
 				return 303 $uri;
 			}
 			if ($http_accept ~* (nquads|n-quads)) {
-				rewrite ^/([^/]+)/([^/]+)$ /$1/$2/page/void.nq;
+				rewrite ^/([^/]+)/([^/]+)(/?)$ /$1/$2/page/void.nq;
 				return 303 $uri;
 			}
 			return 406;
