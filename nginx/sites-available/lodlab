@@ -53,6 +53,10 @@ server {
 			return 406;
 		}
 
+		location /static {
+			root /var/www/lodlab
+		}
+		
 		location / {
             proxy_pass       http://dev.lodlab.com/proxy/;
 			proxy_set_header Host      $host;
