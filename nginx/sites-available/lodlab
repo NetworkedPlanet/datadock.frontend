@@ -8,9 +8,11 @@ server {
 
         access_log /var/log/nginx/access.log upstreamlog;
 
-        location ~ ^/([^/]+)/([^/]+)/page/(.*) {
+        location ~ ^/([^/]+)/([^/]+)/page/ {
+			if ($request_uri ~* "^/([^/]+)/([^/]+)/page/(.*)") {
                 # Proxy HTML files from the github pages account
                 proxy_pass https://$1.github.io/$2/page/$3;
+			}
         }
 
         location ~ ^/([^/]+)/([^/]+)/data/(.*).nq$ {
@@ -30,6 +32,7 @@ server {
         }
 
         location ~ ^/([^/]+)/([^/]+)/id/ {
+				rewrite ^ $request_uri;
                 if ($http_accept ~* html){
                     rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/page/$3.html;
                     return 303 $uri;
