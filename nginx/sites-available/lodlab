@@ -53,8 +53,8 @@ server {
 			return 406;
 		}
 
-		location /static {
-			root /var/www/lodlab
+		location /static/ {
+			root /var/www/lodlab;
 		}
 		
 		location / {
