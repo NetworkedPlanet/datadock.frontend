@@ -9,64 +9,64 @@ server {
         access_log /var/log/nginx/access.log upstreamlog;
 
         location ~ ^/([^/]+)/([^/]+)/page/ {
-			if ($request_uri ~* "^/([^/]+)/([^/]+)/page/(.*)") {
+            if ($request_uri ~* "^/([^/]+)/([^/]+)/page/(.*)") {
                 # Proxy HTML files from the github pages account
                 proxy_pass https://$1.github.io/$2/page/$3;
-			}
+            }
         }
 
         location ~ ^/([^/]+)/([^/]+)/data/(.*).nq$ {
-			if ($request_uri ~* "^/([^/]+)/([^/]+)/data/(.*).nq$") {
+            if ($request_uri ~* "^/([^/]+)/([^/]+)/data/(.*).nq$") {
                 proxy_pass https://$1.github.io/$2/data/$3.nq;
-                proxy_hide_header Content-Type;
-                add_header Content-Type application/n-quads;
-			}
+            }
+            proxy_hide_header Content-Type;
+            add_header Content-Type application/n-quads;
         }
 
         location ~ ^/([^/]+)/([^/]+)/data/ {
-				rewrite ^ $request_uri;
-                if ($http_accept ~* html) {
-					rewrite ^/([^/]+)/([^/]+)/data/(.*)$ /$1/$2/page/$3.html;
-                    return 303 $uri;
-                }
-                if ($http_accept ~* (nquads|n-quads)) {
-                    rewrite ^/([^/]+)/([^/]+)/data/(.*) /$1/$2/data/$3.nq last;
-                }
-        }
-
-        location ~ ^/([^/]+)/([^/]+)/id/ {
-				rewrite ^ $request_uri;
-                if ($http_accept ~* html){
-                    rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/page/$3.html;
-                    return 303 $uri;
-                }
-                if ($http_accept ~* (nquads|n-quads)){
-                    rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/data/$3.nq;
-                    return 303 $uri;
-                }
-                return 406;
-        }
-
-		location ~ ^/([^/]+)/([^/]+)(/?)$ {
-			if ($http_accept ~* html){
-				rewrite ^/([^/]+)/([^/]+)(/?)$ /$1/$2/page/index.html;
+			rewrite ^ $request_uri;
+			if ($http_accept ~* html) {
+				rewrite ^/([^/]+)/([^/]+)/data/(.*)$ /$1/$2/page/$3.html;
 				return 303 $uri;
 			}
 			if ($http_accept ~* (nquads|n-quads)) {
-				rewrite ^/([^/]+)/([^/]+)(/?)$ /$1/$2/page/void.nq;
+				rewrite ^/([^/]+)/([^/]+)/data/(.*) /$1/$2/data/$3.nq last;
+			}
+        }
+
+        location ~ ^/([^/]+)/([^/]+)/id/ {
+			rewrite ^ $request_uri;
+			if ($http_accept ~* html){
+				rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/page/$3.html;
+				return 303 $uri;
+			}
+			if ($http_accept ~* (nquads|n-quads)){
+				rewrite ^/([^/]+)/([^/]+)/id/(.*)$ /$1/$2/data/$3.nq;
 				return 303 $uri;
 			}
 			return 406;
-		}
+        }
 
-		location /static/ {
-			root /var/www/lodlab;
-		}
-		
-		location / {
+        location ~ ^/([^/]+)/([^/]+)(/?)$ {
+            if ($http_accept ~* html){
+                rewrite ^/([^/]+)/([^/]+)(/?)$ /$1/$2/page/index.html;
+                return 303 $uri;
+            }
+            if ($http_accept ~* (nquads|n-quads)) {
+                rewrite ^/([^/]+)/([^/]+)(/?)$ /$1/$2/page/void.nq;
+                return 303 $uri;
+            }
+            return 406;
+        }
+
+        location /static/ {
+            root /var/www/lodlab;
+        }
+        
+        location / {
             proxy_pass       http://dev.lodlab.com/proxy/;
-			proxy_set_header Host      $host;
-			proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header Host      $host;
+            proxy_set_header X-Real-IP $remote_addr;
         }
 
 }
