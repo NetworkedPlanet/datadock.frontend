@@ -16,9 +16,11 @@ server {
         }
 
         location ~ ^/([^/]+)/([^/]+)/data/(.*).nq$ {
+			if ($request_uri ~* "^/([^/]+)/([^/]+)/data/(.*).nq$") {
                 proxy_pass https://$1.github.io/$2/data/$3.nq;
                 proxy_hide_header Content-Type;
                 add_header Content-Type application/n-quads;
+			}
         }
 
         location ~ ^/([^/]+)/([^/]+)/data/ {
