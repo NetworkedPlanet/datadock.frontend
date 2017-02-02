@@ -1,2 +1,2 @@
-# lodlab.frontend
-The front-end server configuration for lodlab
+# datadock.frontend
+The front-end server configuration for datadock.io

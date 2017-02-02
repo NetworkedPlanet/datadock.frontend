@@ -1,7 +1,7 @@
-# Configuration for serving the lodlab.com site
+# Configuration for serving the datadock.io site
 server {
         listen          80;
-        server_name     lodlab.com;
+        server_name     datadock.io;
 
         # Set the DNS resolver to use for proxy lookups
         resolver        8.8.8.8;
@@ -66,11 +66,11 @@ server {
         }
 
         location /static/ {
-            root /var/www/lodlab;
+            root /var/www/datadock;
         }
         
         location / {
-            proxy_pass       http://dev.lodlab.com/proxy/;
+            proxy_pass       http://dev.datadock.io/proxy/;
             proxy_set_header Host      $host;
             proxy_set_header X-Real-IP $remote_addr;
         }
