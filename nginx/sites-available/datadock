@@ -70,14 +70,14 @@ server {
         }
         
         location / {
-            proxy_pass       http://dev.datadock.io/proxy/;
+            proxy_pass       http://manage.datadock.io/proxy/;
             proxy_set_header Host      $host;
             proxy_set_header X-Real-IP $remote_addr;
         }
 
 		location /Content/ {
-			proxy_pass http://dev.datadock.io/Content/;
+			proxy_pass http://manage.datadock.io/Content/;
             proxy_set_header Host      $host;
-            proxy_set_header X-Real-IP $remote_addr;		
+            proxy_set_header X-Real-IP $remote_addr;
 		}
 }
