@@ -9,12 +9,12 @@ server {
         access_log /var/log/nginx/access.log upstreamlog;
 
 		# Local static content
-        location /static/ {
+        location ^~ /static {
             root /var/www/datadock;
         }
 
 		# Proxied static content
-		location /Content/ {
+		location ^~ /Content {
 			proxy_pass http://manage.datadock.io/Content/;
             proxy_set_header Host      $host;
             proxy_set_header X-Real-IP $remote_addr;
