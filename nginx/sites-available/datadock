@@ -8,6 +8,18 @@ server {
 
         access_log /var/log/nginx/access.log upstreamlog;
 
+		# Local static content
+        location /static/ {
+            root /var/www/datadock;
+        }
+
+		# Proxied static content
+		location /Content/ {
+			proxy_pass http://manage.datadock.io/Content/;
+            proxy_set_header Host      $host;
+            proxy_set_header X-Real-IP $remote_addr;
+		}
+
         location ~ ^/([^/]+)/([^/]+)/page/ {
             if ($request_uri ~* "^/([^/]+)/([^/]+)/page/(.*)") {
                 # Proxy HTML files from the github pages account
@@ -64,20 +76,11 @@ server {
             }
             return 406;
         }
-
-        location /static/ {
-            root /var/www/datadock;
-        }
-        
+       
         location / {
             proxy_pass       http://manage.datadock.io/proxy/;
             proxy_set_header Host      $host;
             proxy_set_header X-Real-IP $remote_addr;
         }
 
-		location /Content/ {
-			proxy_pass http://manage.datadock.io/Content/;
-            proxy_set_header Host      $host;
-            proxy_set_header X-Real-IP $remote_addr;
-		}
 }
