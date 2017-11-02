@@ -20,11 +20,11 @@ server {
             proxy_set_header X-Real-IP $remote_addr;
 		}
 
-        location ~ ^/([^/]+)/([^/]+)/page/ {
-            if ($request_uri ~* "^/([^/]+)/([^/]+)/page/(.*)") {
-                # Proxy HTML files from the github pages account
-                proxy_pass https://$1.github.io/$2/page/$3;
-            }
+
+        location ~ ^/(?<user>[^/]+)/(?<repo>[^/]+)/page/ {
+            error_page 301 = @handle_redirect;
+            proxy_intercept_errors on;
+            proxy_pass https://$user.github.io/$repo/page/;
         }
         
         location ~ ^/([^/]+)/([^/]+)/csv/(.*)$ {
@@ -83,4 +83,8 @@ server {
             proxy_set_header X-Real-IP $remote_addr;
         }
 
+        location @handle_redirect {
+            set $saved_redirect_location '$upstream_http_location';
+            proxy_pass $saved_redirect_location;
+        }
 }
